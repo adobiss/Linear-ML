@@ -105,7 +105,7 @@ def plot_chart(X, w, attempt_counter):
    
 ## DATASET IMPORT
 
-dataset_path = 'D:/ML\Datasets/Logic Gates/AND_GATE.csv'
+dataset_path = 'D:/ML/Datasets/Logic Gates/AND_GATE.csv'
 dataset = np.genfromtxt(dataset_path, delimiter=',', skip_header=1)
 
 # Input values
