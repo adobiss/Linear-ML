@@ -105,7 +105,7 @@ def plot_chart(X, w, attempt_counter):
    
 ## DATASET IMPORT
 
-dataset_path = r"D:\ML\Datasets\Logic Gates\AND_GATE.csv"
+dataset_path = 'D:/ML\Datasets/Logic Gates/AND_GATE.csv'
 dataset = np.genfromtxt(dataset_path, delimiter=',', skip_header=1)
 
 # Input values
@@ -164,7 +164,6 @@ w_mag = np.linalg.norm(w)
 for i in range(X.shape[0]):
     d = np.matmul(chunks[i], w) / w_mag
     print("Decision boundary distance to point {} is: ".format(i + 1), round(d.flatten().tolist()[0], 2), sep='')
-  
-plot_chart(X, w, attempt_counter)
 
 print("Final weights are {}, {} training steps taken".format(w.flatten().tolist(), attempt_counter))
+plot_chart(X, w, attempt_counter)
