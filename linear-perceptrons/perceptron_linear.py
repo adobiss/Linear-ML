@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 class Perceptron:
     def __init__(self, learning_rate=0.1, n_iters=1000):
@@ -33,14 +34,14 @@ class Perceptron:
                     update_made = True
                     self.weights += update * x_i
                     self.bias += update
+                    #print('{}x+{}y={}'.format(self.weights[0], self.weights[1], self.bias * -1))
 
             # Training epoch counter       
             if update_made:
                 self.epoch_counter += 1
+            else:
+                break # If no update was made in this epoch, stop the training
 
-            # If no update was made in this epoch, stop the training
-            if not update_made:
-                break
         print("Training completed. Epochs taken: {}".format(self.epoch_counter))
 
     def predict(self, X):
@@ -49,15 +50,51 @@ class Perceptron:
         return y_predicted
 
     def _unit_step_func(self, x):
-        return np.where(x>0, 1, 0)
+        return np.where(x>=0, 1, 0)
+    
+    def plot_decision_boundary(self, X, y):
+        """
+        Plots the decision boundary of the perceptron given input (X) and output (y)
+        """
+        fig, ax = plt.subplots()
+        
+        # Get min and max values and add some padding
+        x_min, x_max = X[:, 0].min() - .5, X[:, 0].max() + .5
+        y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
+        
+        # Generate a grid of points with distance h between them
+        h = 0.02
+        xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+        Z = self.predict(np.c_[xx.ravel(), yy.ravel()])
+        Z = Z.reshape(xx.shape)
+
+        # Plot the contour and training examples
+        plt.contourf(xx, yy, Z, cmap=plt.cm.Spectral)
+        plt.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.Spectral)
+
+        # Calculate line parameters
+        w1, w2 = self.weights[0], self.weights[1]
+        b = self.bias
+
+        # Create line
+        x_values = np.linspace(x_min, x_max, 100)
+        y_values = - (b + w1*x_values) / w2
+
+        # Plot decision boundary line
+        ax.plot(x_values, y_values, "k--", label=f"{w1:.2f}x + {w2:.2f}y = {-b:.2f}")
+
+        plt.legend()
+        plt.show() 
 
 # For AND gate
 X_and = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 y_and = np.array([0, 0, 0, 1])
 
-p_and = Perceptron(learning_rate=0.1, n_iters=1000)
+p_and = Perceptron(learning_rate=1, n_iters=1000)
 p_and.fit(X_and, y_and)
 predictions_and = p_and.predict(X_and)
+
+p_and.plot_decision_boundary(X_and, y_and)
 
 print("AND gate prediction:", predictions_and)
 
@@ -65,7 +102,10 @@ print("AND gate prediction:", predictions_and)
 X_or = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 y_or = np.array([-1, 1, 1, 1])
 
-p_or = Perceptron(learning_rate=0.1, n_iters=1000)
+p_or = Perceptron(learning_rate=1, n_iters=1000)
 p_or.fit(X_or, y_or)
 predictions_or = p_or.predict(X_or)
+
+p_or.plot_decision_boundary(X_or, y_or)
+
 print("OR gate prediction:", predictions_or)
