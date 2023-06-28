@@ -8,7 +8,7 @@ class Perceptron:
         self.activation_func = self._unit_step_func
         self.weights = None
         self.bias = None
-        self.epoch_counter = 0
+        self.epoch_counter = 1
 
     def fit(self, X, y):
         n_samples, n_features = X.shape
@@ -27,13 +27,24 @@ class Perceptron:
             for idx, x_i in enumerate(X):
                 linear_output = np.dot(x_i, self.weights) + self.bias
                 y_predicted = self.activation_func(linear_output)
-
+                print('Sample: {}'.format(idx + 1))
+                print('Linear output: {}, predicted class: {}'.format(linear_output, y_predicted))
                 # Perceptron update rule
-                update = self.lr * (y_[idx] - y_predicted)
+                if linear_output == 0 and y_[idx] == 0:
+                    update = self.lr * (-1)
+                else:
+                    update = self.lr * (y_[idx] - y_predicted)
+
                 if update != 0:
+                    print('Epoch: {}'.format(self.epoch_counter))
+                    
+                    print('Update: {}'.format(update))
+                   
+                    #print(linear_output, y_predicted)
                     update_made = True
                     self.weights += update * x_i
                     self.bias += update
+                    print(self.bias, self.weights)
                     #print('{}x+{}y={}'.format(self.weights[0], self.weights[1], self.bias * -1))
 
             # Training epoch counter       
@@ -50,7 +61,7 @@ class Perceptron:
         return y_predicted
 
     def _unit_step_func(self, x):
-        return np.where(x>=0, 1, 0)
+        return np.where(x>0, 1, 0)
     
     def plot_decision_boundary(self, X, y):
         """
@@ -90,14 +101,14 @@ class Perceptron:
 X_and = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 y_and = np.array([0, 0, 0, 1])
 
-p_and = Perceptron(learning_rate=1, n_iters=1000)
+p_and = Perceptron(learning_rate=0.1, n_iters=1000)
 p_and.fit(X_and, y_and)
 predictions_and = p_and.predict(X_and)
 
 p_and.plot_decision_boundary(X_and, y_and)
 
 print("AND gate prediction:", predictions_and)
-
+'''
 # For OR gate
 X_or = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 y_or = np.array([-1, 1, 1, 1])
@@ -106,6 +117,7 @@ p_or = Perceptron(learning_rate=1, n_iters=1000)
 p_or.fit(X_or, y_or)
 predictions_or = p_or.predict(X_or)
 
-p_or.plot_decision_boundary(X_or, y_or)
+#p_or.plot_decision_boundary(X_or, y_or)
 
 print("OR gate prediction:", predictions_or)
+'''
