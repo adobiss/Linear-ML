@@ -9,7 +9,7 @@ class Perceptron:
         self.weights = None
         self.bias = None
         self.epoch_counter = 1
-        self.update_counter = 1
+        self.update_counter = 0
 
     def fit(self, X, y):
         n_samples, n_features = X.shape
@@ -28,13 +28,16 @@ class Perceptron:
             for idx, x_i in enumerate(X):
                 linear_output = np.dot(x_i, self.weights) + self.bias
                 y_predicted = self.activation_func(linear_output)
-                print('Sample: {}'.format(idx + 1))
+                print('Sample {}: {}'.format(idx + 1, x_i))
                 print('Linear output: {}, predicted class: {}'.format(linear_output, y_predicted))
                 # Perceptron update rule
+
                 if linear_output == 0 and y_[idx] == 0:
                     update = self.lr * (-1)
                 else:
                     update = self.lr * (y_[idx] - y_predicted)
+                
+                #update = self.lr * (y_[idx] - y_predicted)
 
                 if update != 0:
                     print('Epoch: {}'.format(self.epoch_counter))
@@ -103,7 +106,7 @@ class Perceptron:
 X_and = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 y_and = np.array([0, 0, 0, 1])
 
-p_and = Perceptron(learning_rate=1, n_iters=1000)
+p_and = Perceptron(learning_rate=0.1, n_iters=1000)
 p_and.fit(X_and, y_and)
 predictions_and = p_and.predict(X_and)
 
