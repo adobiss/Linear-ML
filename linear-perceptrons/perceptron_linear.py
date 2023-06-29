@@ -9,6 +9,7 @@ class Perceptron:
         self.weights = None
         self.bias = None
         self.epoch_counter = 1
+        self.update_counter = 1
 
     def fit(self, X, y):
         n_samples, n_features = X.shape
@@ -39,11 +40,12 @@ class Perceptron:
                     print('Epoch: {}'.format(self.epoch_counter))
                     
                     print('Update: {}'.format(update))
-                   
                     #print(linear_output, y_predicted)
                     update_made = True
                     self.weights += update * x_i
                     self.bias += update
+                    self.update_counter += 1
+                    print(self.update_counter)
                     print(self.bias, self.weights)
                     #print('{}x+{}y={}'.format(self.weights[0], self.weights[1], self.bias * -1))
 
@@ -53,7 +55,7 @@ class Perceptron:
             else:
                 break # If no update was made in this epoch, stop the training
 
-        print("Training completed. Epochs taken: {}".format(self.epoch_counter))
+        print("Training completed. Epochs taken: {}, update count: {}".format(self.epoch_counter, self.update_counter))
 
     def predict(self, X):
         linear_output = np.dot(X, self.weights) + self.bias
@@ -101,7 +103,7 @@ class Perceptron:
 X_and = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 y_and = np.array([0, 0, 0, 1])
 
-p_and = Perceptron(learning_rate=0.1, n_iters=1000)
+p_and = Perceptron(learning_rate=1, n_iters=1000)
 p_and.fit(X_and, y_and)
 predictions_and = p_and.predict(X_and)
 
