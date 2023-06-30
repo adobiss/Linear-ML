@@ -16,8 +16,8 @@ class Perceptron:
         n_samples, n_features = X.shape
 
         # init parameters
-        self.weights = np.zeros(n_features)
-        self.bias = 0
+        self.weights = np.ones(n_features)
+        self.bias = 1
 
         y_ = np.array([1 if i > 0 else 0 for i in y])
 
@@ -51,7 +51,6 @@ class Perceptron:
                     self.weights += update * x_i
                     self.bias += update
                     print('Bias after update: {}, weights after update: {}'.format(self.bias, self.weights))
-                    #print('{}x+{}y={}'.format(self.weights[0], self.weights[1], self.bias * -1))
 
             # Training epoch counter       
             if update_made:
@@ -108,13 +107,38 @@ class Perceptron:
 X_and = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 y_and = np.array([0, 0, 0, 1])
 
-p_and = Perceptron(learning_rate=1, n_iters=1000)
-p_and.fit(X_and, y_and)
-predictions_and = p_and.predict(X_and)
+learning_rate = []
+epochs = []
+updates = []
 
-p_and.plot_decision_boundary(X_and, y_and)
+for lr in np.linspace(0.1, 1.0, num=10):
+    p_and = Perceptron(learning_rate=round(lr,2), n_iters=1000)
+    p_and.fit(X_and, y_and)
+    learning_rate.append(round(lr,2))
+    epochs.append(p_and.epoch_counter)
+    updates.append(p_and.update_counter)
+    predictions_and = p_and.predict(X_and)
+    #p_and.plot_decision_boundary(X_and, y_and)
+    print('{}x+{}y={}'.format(p_and.weights[0], p_and.weights[1], p_and.bias * -1))
+    print("AND gate prediction:", predictions_and)
 
-print("AND gate prediction:", predictions_and)
+min_updates = min(updates)
+
+for lr, u, e in zip(learning_rate, updates, epochs):
+    print('Learning rate {}: updates taken: {}, epochs taken: {}'.format(lr, u, e))
+
+print("\nResults for the minimum number of updates:")
+
+# Iterate over learning_rate, updates, and epochs
+for lr, u, e in zip(learning_rate, updates, epochs):
+    # Print the cases where updates is equal to the minimum value
+    if u == min_updates:
+        print('Learning rate {}: updates taken: {}, epochs taken: {}'.format(lr, u, e))
+
+#print(learning_rate)
+#print(updates)
+#print(epochs)
+
 '''
 # For OR gate
 X_or = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
