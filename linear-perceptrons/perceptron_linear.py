@@ -112,7 +112,7 @@ p_and = Perceptron(learning_rate=1, n_iters=1000)
 p_and.fit(X_and, y_and)
 predictions_and = p_and.predict(X_and)
 
-#p_and.plot_decision_boundary(X_and, y_and)
+p_and.plot_decision_boundary(X_and, y_and)
 
 print("AND gate prediction:", predictions_and)
 '''
