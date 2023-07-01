@@ -170,6 +170,6 @@ p_and.fit(X, y_and) # Fit the model
 # Make predictions, plot decision boundary and display final parameters
 predictions_and = p_and.predict(X) # Make predictions
 print("Training completed: update count: {}, epochs taken: {}".format(p_and.update_counter, p_and.epoch_counter)) # Display training stats
-print("Final bias is {}, final weights are {}, {}".format(round(p_and.bias,2), round(p_and.weights[0],2), round(p_and.weights[1]),2))  # Display final parameters
+print("Final bias is: {}, final weights are: {}".format(round(p_and.bias,2), p_and.weights.round(2)))  # Display final parameters
 print("AND gate prediction:", predictions_and) # Display predictions
 p_and.plot_decision_boundary(X, y_and) # Plot decision boundary
