@@ -3,26 +3,40 @@ import matplotlib.pyplot as plt
 
 class Perceptron:
     def __init__(self, learning_rate=1, n_iters=1000, tolerance=1e-9):
-        self.lr = learning_rate
-        self.n_iters = n_iters
-        self.tolerance = tolerance
-        self.activation_func = self._unit_step_func
-        self.weights = None
-        self.bias = None
-        self.epoch_counter = 0
-        self.update_counter = 0
+        """
+        Initialize a new instance of the Perceptron class.
+
+        Parameters:
+        learning_rate (float): The learning rate to use when adjusting the weights and bias.
+        n_iters (int): The maximum number of iterations to use in the training process.
+        tolerance (float): The error tolerance for the neuron's linear output.
+        """
+        self.lr = learning_rate  # Learning rate
+        self.n_iters = n_iters  # Maximum number of iterations
+        self.tolerance = tolerance  # Error tolerance for the neuron's linear output
+        self.activation_func = self._unit_step_func  # Activation function (unit step function)
+        self.weights = None  # Weights vector
+        self.bias = None  # Bias term
+        self.epoch_counter = 0  # Counter for completed epochs
+        self.update_counter = 0  # Counter for weight updates
 
     def fit(self, X, y):
+        """
+        Train the perceptron model using the provided training data.
+
+        Parameters:
+        X (array): The input features for the training data.
+        y (array): The target outputs for the training data.
+        """
         n_samples, n_features = X.shape
 
-        # init parameters
+        # Init parameters
         self.weights = np.ones(n_features)
         self.bias = 1
 
         y_ = np.array([1 if i > 0 else 0 for i in y])
 
         for _ in range(self.n_iters):
-
             # Keep track if an update was made
             update_made = False
 
@@ -31,42 +45,45 @@ class Perceptron:
                 if abs(linear_output) < self.tolerance:
                     linear_output = 0
                 y_predicted = self.activation_func(linear_output)
-                print('Sample {}: {}'.format(idx + 1, x_i))
-                print('Linear output: {}, predicted class: {}, correct class: {}'.format(linear_output, y_predicted, y[idx]))
+                
                 # Perceptron update rule
 
+                # To account for negative class lying on the decision boundary    
                 if linear_output == 0 and y_[idx] == 0:
                     update = self.lr * (-1)
                 else:
-                    update = self.lr * (y_[idx] - y_predicted)
-                
-                #update = self.lr * (y_[idx] - y_predicted)
+                    update = self.lr * (y_[idx] - y_predicted) # Error function
 
-                if update != 0:
+                if update != 0: # Error function
                     self.update_counter += 1
-                    print('Update #{}'.format(self.update_counter))
-                    print('Bias update: {}, weights update: {}'.format(update, update * x_i))
-                    #print(linear_output, y_predicted)
                     update_made = True
                     self.weights += update * x_i
                     self.bias += update
-                    print('Bias after update: {}, weights after update: {}'.format(self.bias, self.weights))
-
+                    
             # Training epoch counter       
             if update_made:
                 self.epoch_counter += 1
-                print('Epoch completed: {}'.format(self.epoch_counter))
             else:
                 break # If no update was made in this epoch, stop the training
 
-        print("Training completed. Epochs taken: {}, update count: {}".format(self.epoch_counter, self.update_counter))
-
     def predict(self, X):
+        """
+        Predict the class labels for the provided data points.
+
+        Parameters:
+        X (array): The data points to classify.
+        """
         linear_output = np.dot(X, self.weights) + self.bias
         y_predicted = self.activation_func(linear_output)
         return y_predicted
 
     def _unit_step_func(self, x):
+        """
+        The unit step function. It is used as the activation function for the perceptron.
+
+        Parameters:
+        x (float): The input to the function.
+        """
         return np.where(x>0, 1, 0)
     
     def plot_decision_boundary(self, X, y):
@@ -100,55 +117,59 @@ class Perceptron:
         # Plot decision boundary line
         ax.plot(x_values, y_values, "k--", label=f"{w1:.2f}x + {w2:.2f}y = {-b:.2f}")
 
+        # Add plot title
+        plt.title('Weight adjustment, step {}'.format(self.update_counter))
+
         plt.legend()
         plt.show() 
 
-# For AND gate
-X_and = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
-y_and = np.array([0, 0, 0, 1])
 
+# Linear logic gate inputs 
+X = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
+
+# Linear logic gate labels
+y_and = np.array([0, 0, 0, 1]) # AND gate labels
+y_or = np.array([0, 1, 1, 1]) # OR gate labels
+y_nand = np.array([1, 1, 1, 0]) # NAND gate labels
+
+# Collect training evaluation data
 learning_rate = []
 epochs = []
 updates = []
 
+# For AND gate
+
+# Fit model using various learning rates
 for lr in np.linspace(0.1, 1.0, num=10):
-    p_and = Perceptron(learning_rate=round(lr,2), n_iters=1000)
-    p_and.fit(X_and, y_and)
-    learning_rate.append(round(lr,2))
+    p_and = Perceptron(learning_rate=round(lr,1), n_iters=1000)
+    p_and.fit(X, y_and)
+    learning_rate.append(round(lr,1))
     epochs.append(p_and.epoch_counter)
     updates.append(p_and.update_counter)
-    predictions_and = p_and.predict(X_and)
-    #p_and.plot_decision_boundary(X_and, y_and)
-    print('{}x+{}y={}'.format(p_and.weights[0], p_and.weights[1], p_and.bias * -1))
-    print("AND gate prediction:", predictions_and)
+    predictions_and = p_and.predict(X)
 
+# Identify and display lowest update count encountered during training
 min_updates = min(updates)
-
 for lr, u, e in zip(learning_rate, updates, epochs):
     print('Learning rate {}: updates taken: {}, epochs taken: {}'.format(lr, u, e))
+print("Results for the minimum number of updates:")
 
-print("\nResults for the minimum number of updates:")
-
-# Iterate over learning_rate, updates, and epochs
+# Iterate over learning_rate, updates, and epochs to obtain a list of best learning rates
+best_lr = []
 for lr, u, e in zip(learning_rate, updates, epochs):
     # Print the cases where updates is equal to the minimum value
     if u == min_updates:
+        best_lr.append(lr)
         print('Learning rate {}: updates taken: {}, epochs taken: {}'.format(lr, u, e))
 
-#print(learning_rate)
-#print(updates)
-#print(epochs)
+# Fit the model based on the best learning rate, using max learning rate if more than one learning rate with identical update count
+print('\nFitting the model based on the best learning rate: {}'.format(max(best_lr)))
+p_and = Perceptron(learning_rate=max(best_lr), n_iters=1000) # Create an object for AND gate 
+p_and.fit(X, y_and) # Fit the model
 
-'''
-# For OR gate
-X_or = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
-y_or = np.array([-1, 1, 1, 1])
-
-p_or = Perceptron(learning_rate=1, n_iters=1000)
-p_or.fit(X_or, y_or)
-predictions_or = p_or.predict(X_or)
-
-p_or.plot_decision_boundary(X_or, y_or)
-
-print("OR gate prediction:", predictions_or)
-'''
+# Make predictions, plot decision boundary and display final parameters
+predictions_and = p_and.predict(X) # Make predictions
+print("Training completed: update count: {}, epochs taken: {}".format(p_and.update_counter, p_and.epoch_counter)) # Display training stats
+print("Final bias is {}, final weights are {}, {}".format(round(p_and.bias,2), round(p_and.weights[0],2), round(p_and.weights[1]),2))  # Display final parameters
+print("AND gate prediction:", predictions_and) # Display predictions
+p_and.plot_decision_boundary(X, y_and) # Plot decision boundary
