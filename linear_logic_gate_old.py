@@ -109,9 +109,9 @@ attempt_counter = 0  # Initializing the counter for weight adjustment steps
 lr = 1  # Setting the learning rate
 
 # Training loop using the Perceptron Learning Algorithm
-while np.any(np.matmul(X, w) * Y <= 0):
+while np.any(np.matmul(X, w) * Y <= 0): # Error function
     for i in range(X.shape[0]):
-        if np.matmul(samples[i], w) * Y[i] <= 0:
+        if np.matmul(samples[i], w) * Y[i] <= 0: # Error function
             w = np.add(w.T, lr * samples[i] * Y[i])  # Updating weights
             w = w.T
             attempt_counter += 1  # Incrementing step counter
