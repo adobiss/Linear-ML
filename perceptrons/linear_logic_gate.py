@@ -43,7 +43,7 @@ class Perceptron:
             for idx, x_i in enumerate(X):
                 linear_output = np.dot(x_i, self.weights) + self.bias
                 if abs(linear_output) < self.tolerance:
-                    linear_output = 0
+                    linear_output = 0 # Correct for floating point error
                 y_predicted = self.activation_func(linear_output)
                 
                 # Perceptron update rule
@@ -59,7 +59,7 @@ class Perceptron:
             if update_made:
                 self.epoch_counter += 1
             else:
-                break # If no update was made in this epoch, stop the training
+                break # If no update was made in this epoch, stop the training.
 
     def predict(self, X):
         """
