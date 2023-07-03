@@ -31,10 +31,10 @@ class Perceptron:
         n_samples, n_features = X.shape
 
         # Init parameters
-        self.weights = np.ones(n_features)
-        self.bias = 1
+        self.weights = np.zeros(n_features)
+        self.bias = 0
 
-        y_ = np.array([1 if i > 0 else 0 for i in y])
+        y_ = np.array([1 if i > 0 else 0 for i in y]) # Converts labels to (0, 1)
 
         for _ in range(self.n_iters):
             # Keep track if an update was made
@@ -47,12 +47,7 @@ class Perceptron:
                 y_predicted = self.activation_func(linear_output)
                 
                 # Perceptron update rule
-
-                # To account for negative class lying on the decision boundary    
-                if linear_output == 0 and y_[idx] == 0:
-                    update = self.lr * (-1)
-                else:
-                    update = self.lr * (y_[idx] - y_predicted) # Error function
+                update = self.lr * (y_[idx] - y_predicted) # Error function
 
                 if update != 0: # Error function
                     self.update_counter += 1
@@ -84,7 +79,8 @@ class Perceptron:
         Parameters:
         x (float): The input to the function.
         """
-        return np.where(x>0, 1, 0)
+        return np.where(x < 0, 0, 
+                       np.where(x == 0, 0.5, 1))
     
     def plot_decision_boundary(self, X, y):
         """
@@ -141,7 +137,7 @@ updates = []
 
 # Fit model using various learning rates
 for lr in np.linspace(0.1, 1.0, num=10):
-    p_and = Perceptron(learning_rate=round(lr,1), n_iters=1000)
+    p_and = Perceptron(learning_rate=round(lr,1), n_iters=1000) ## CHECK DIS!!
     p_and.fit(X, y_and)
     learning_rate.append(round(lr,1))
     epochs.append(p_and.epoch_counter)
@@ -152,7 +148,7 @@ for lr in np.linspace(0.1, 1.0, num=10):
 min_updates = min(updates)
 for lr, u, e in zip(learning_rate, updates, epochs):
     print('Learning rate {}: updates taken: {}, epochs taken: {}'.format(lr, u, e))
-print("Results for the minimum number of updates:")
+print("\nResults for the minimum number of updates:")
 
 # Iterate over learning_rate, updates, and epochs to obtain a list of best learning rates
 best_lr = []
@@ -161,7 +157,7 @@ for lr, u, e in zip(learning_rate, updates, epochs):
     if u == min_updates:
         best_lr.append(lr)
         print('Learning rate {}: updates taken: {}, epochs taken: {}'.format(lr, u, e))
-
+        
 # Fit the model based on the best learning rate, using max learning rate if more than one learning rate with identical update count
 print('\nFitting the model based on the best learning rate: {}'.format(max(best_lr)))
 p_and = Perceptron(learning_rate=max(best_lr), n_iters=1000) # Create an object for AND gate 
