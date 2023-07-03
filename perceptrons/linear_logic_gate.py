@@ -31,8 +31,8 @@ class Perceptron:
         n_samples, n_features = X.shape
 
         # Init parameters
-        self.weights = np.zeros(n_features)
-        self.bias = 0
+        self.weights = np.ones(n_features)
+        self.bias = 1
 
         y_ = np.array([1 if i > 0 else 0 for i in y]) # Converts labels to (0, 1)
 
@@ -74,7 +74,7 @@ class Perceptron:
 
     def _unit_step_func(self, x):
         """
-        The unit step function. It is used as the activation function for the perceptron.
+        The unit step function with 0.5 output for zero argument . It is used as the activation function for the perceptron.
 
         Parameters:
         x (float): The input to the function.
@@ -137,21 +137,23 @@ updates = []
 
 # Fit model using various learning rates
 for lr in np.linspace(0.1, 1.0, num=10):
-    p_and = Perceptron(learning_rate=round(lr,1), n_iters=1000) ## CHECK DIS!!
+    p_and = Perceptron(learning_rate=round(lr,1), n_iters=1000) # Includes floating-point error  correction for resulting learning rate values
     p_and.fit(X, y_and)
     learning_rate.append(round(lr,1))
     epochs.append(p_and.epoch_counter)
     updates.append(p_and.update_counter)
     predictions_and = p_and.predict(X)
 
-# Identify and display lowest update count encountered during training
+# Identify lowest update count encountered during training
 min_updates = min(updates)
 for lr, u, e in zip(learning_rate, updates, epochs):
     print('Learning rate {}: updates taken: {}, epochs taken: {}'.format(lr, u, e))
-print("\nResults for the minimum number of updates:")
 
 # Iterate over learning_rate, updates, and epochs to obtain a list of best learning rates
+print("\nResults for the minimum number of updates:")
+
 best_lr = []
+
 for lr, u, e in zip(learning_rate, updates, epochs):
     # Print the cases where updates is equal to the minimum value
     if u == min_updates:
