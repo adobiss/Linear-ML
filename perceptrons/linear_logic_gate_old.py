@@ -11,9 +11,9 @@ def plot_chart(X, w, attempt_counter):
     w (array): Weight vector
     attempt_counter (int): Step count for weight adjustment
     """
-    
-    x_coordinates = X[:, 1]  # Extracting x-coordinates from input matrix
-    y_coordinates = X[:, 2]  # Extracting y-coordinates from input matrix
+    # Extracting x, y coordinates from input matrix
+    x_coordinates = X[:, 1]
+    y_coordinates = X[:, 2]
 
     x = np.linspace(-np.max(X), np.max(X))  # Domain of the function for plotting
 
@@ -68,12 +68,12 @@ def plot_chart(X, w, attempt_counter):
             if i in graph_equation:
                 graph_equation = graph_equation.replace(i, get_value(i))
 
-        # Plotting the line
+        # Plotting the line, adding plot title and labels
         plt.plot(x, y, label=graph_equation, color='blue')
-        plt.title('Weight adjustment, step {}'.format(attempt_counter))  # Adding title to the plot
-        plt.xlabel('x axis')  # Setting x-axis label
-        plt.ylabel('y axis')  # Setting y-axis label
-        plt.legend(loc='upper right')  # Adding legend
+        plt.title('Weight adjustment, step {}'.format(attempt_counter))
+        plt.xlabel('x axis')
+        plt.ylabel('y axis')
+        plt.legend(loc='upper right')
         plt.grid(alpha=.4,linestyle='--')  # Adding grid lines for better readability
 
         # Colouring the points based on their class
@@ -85,38 +85,39 @@ def plot_chart(X, w, attempt_counter):
                 coordinate_colors.append('Green')
 
         plt.scatter(x_coordinates, y_coordinates, color=coordinate_colors)  # Plotting the points
-        plt.show()  # Displaying the plot
+        plt.show() 
 
 # Creating a dataset for AND gate
 dataset = np.array([
     [0, 0, -1],  # 0 and 0 => -1
-    [0, 1, -1],  # 0 and 1 => -1
     [1, 0, -1],  # 1 and 0 => -1
+    [0, 1, -1],  # 0 and 1 => -1
     [1, 1, 1]    # 1 and 1 => 1
 ])
 
-X_inputs = dataset[:, :-1]  # Extracting input values from the dataset
-Y = dataset[:, -1:]  # Extracting output values (classes) from the dataset
+X_inputs = dataset[:, :-1]
+Y = dataset[:, -1:]
 
-bias_inputs = np.ones((X_inputs.shape[0], 1), dtype=int)  # Creating a bias input array of ones
-X = np.concatenate((bias_inputs, X_inputs), axis=1)  # Adding bias inputs to the input array
+# Adding bias inputs to the input array
+bias_inputs = np.ones((X_inputs.shape[0], 1), dtype=int)
+X = np.concatenate((bias_inputs, X_inputs), axis=1)
 
-samples = np.split(X, 4)  # Splitting the input matrix into individual vectors
+X_samples = np.split(X, 4)
 
-w = np.zeros((X.shape[1], 1), dtype=int)  # Initializing the weight vector with zeros
+w = np.zeros((X.shape[1], 1), dtype=int)  # Initialising the weight vector
 
-attempt_counter = 0  # Initializing the counter for weight adjustment steps
+attempt_counter = 0
 lr = 1  # Setting the learning rate
 
-# Training loop using the Perceptron Learning Algorithm
-while np.any(np.matmul(X, w) * Y <= 0): # Error function
+# Training loop using the perceptron update rule
+while np.any(np.matmul(X, w) * Y <= 0): # Error function minimisation
     for i in range(X.shape[0]):
-        if np.matmul(samples[i], w) * Y[i] <= 0: # Error function
-            w = np.add(w.T, lr * samples[i] * Y[i])  # Updating weights
+        if np.matmul(X_samples[i], w) * Y[i] <= 0: # Error function
+            w = np.add(w.T, lr * X_samples[i] * Y[i])
             w = w.T
-            attempt_counter += 1  # Incrementing step counter
-            print(w.T)
+            attempt_counter += 1
+            print('Bias after update: {}, weights after update: {}'.format(w.T[0][0], w.T[0][1:]))
 
-plot_chart(X, w, attempt_counter)  # Plotting the results
+plot_chart(X, w, attempt_counter)
 
-print("Final weights are {}, {} training steps taken".format(w.flatten().tolist(), attempt_counter))  # Printing the final weights and step count
+print("Final weights are {}, {} training steps taken".format(w.flatten().tolist(), attempt_counter))
