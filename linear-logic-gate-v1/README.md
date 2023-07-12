@@ -30,6 +30,5 @@ Finally, the script outputs the final weights and the number of training steps t
 ## Output
 The script prints the final weight vector, and the number of training steps taken. It also displays a plot of the decision boundary, with the points coloured according to their class (red for -1, green for 1):
 
-_Final weights are [-4, 2, 3], 18 training steps taken_.
-
+Final weights are [-4, 2, 3], 18 training steps taken  
 ![AND Gate Decision Boundary](https://github.com/adobiss/numpy-ml/assets/95383833/3190f736-333c-4ef0-b6ec-0b2b37895812)
