@@ -116,7 +116,6 @@ while np.any(np.matmul(X, w) * Y <= 0): # Error function minimisation
             w = np.add(w.T, lr * X_samples[i] * Y[i])
             w = w.T
             attempt_counter += 1
-            print('Bias after update: {}, weights after update: {}'.format(w.T[0][0], w.T[0][1:]))
 
 plot_chart(X, w, attempt_counter)
 
