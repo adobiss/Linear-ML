@@ -117,6 +117,6 @@ while np.any(np.matmul(X, w) * Y <= 0): # Error function minimisation
             w = w.T
             attempt_counter += 1
 
-plot_chart(X, w, attempt_counter)
-
 print("Final weights are {}, {} training steps taken".format(w.flatten().tolist(), attempt_counter))
+
+plot_chart(X, w, attempt_counter)
