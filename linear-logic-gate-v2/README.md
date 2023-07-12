@@ -2,7 +2,7 @@
 This Python script applies the Perceptron algorithm to model binary logic gates like AND, OR and includes decision boundary visualisation.
 
 ## Overview
-The Perceptron in this version uses a unit step activation function and implements the standard update rule. It also contains an error tolerance feature for floating point errors, decision boundary visualisation, and a learning example for the AND logic function.
+The Perceptron in this version uses a unit step activation function and implements the standard update rule. It also contains an error tolerance feature for floating point errors, decision boundary visualisation and a learning example for the AND logic function.
 
 ## Prerequisites
 The script requires the following Python packages:
@@ -27,7 +27,7 @@ pip install numpy matplotlib
 ## Description of the script
 The script defines a Perceptron class and sets up datasets for AND and OR logic gates using 0 and 1 for input and output values.
 
-It explores learning rates using the AND gate as an example, ranging from 0.1 to 1.0. For each rate, it creates a Perceptron model, trains it on the AND gate data, and logs the epoch and weight update count during training.
+It explores learning rates using the AND gate as an example, ranging from 0.1 to 1.0. For each rate, it creates a Perceptron model, trains it on the AND gate data and logs the epoch and weight update count during training.
 
 The training loop itself applies the Perceptron update rule until all data points are correctly classified or maximum iterations reached. The rule adjusts weights and bias when model's prediction differs from true output using **update = learning_rate * (true_output - predicted_output)**.
 
