@@ -28,5 +28,5 @@ After the setup, the script enters the training loop using the perceptron update
 Finally, the script outputs the final weights and the number of training steps taken, and calls the plot_chart() function to display the decision boundary of the logic gate.
 
 ## Output
-The script prints the final weight vector, and the number of training steps taken. It also displays a plot of the decision boundary, with the points colored according to their class (red for -1, green for 1).
+The script prints the final weight vector, and the number of training steps taken. It also displays a plot of the decision boundary, with the points coloured according to their class (red for -1, green for 1).
 ![AND Gate Decision Boundary](https://github.com/adobiss/numpy-ml/assets/95383833/58f9541d-ffff-4bb9-89be-3afefd7c665c)
