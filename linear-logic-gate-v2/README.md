@@ -91,4 +91,4 @@ Fitting the model based on the best learning rate: 0.7
 Training completed: update count: 5, epochs taken: 2  
 Final bias is: -1.1, final weights are: [0.3 1. ]  
 AND gate prediction: [0. 0. 0. 1.]  
-![AND Gate Decision Boundary](https://github.com/adobiss/numpy-ml/assets/95383833/8eb9efdc-1a03-4330-8074-ee594dc87c29)
+![AND Gate Decision Boundary](https://github.com/adobiss/numpy-ml/assets/95383833/c38e7880-5555-4d80-a785-ffe3c28ebaf1)
