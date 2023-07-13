@@ -37,7 +37,7 @@ Then, it defines an AND gate dataset, where 0 and 1 represent the input values a
 
 Next, the bias inputs are added to the input array and the weight vector is initialised with zeroes.
 
-After the setup, the script enters the training loop using the perceptron update rule. The training continues until all data points are classified correctly (i.e., until the dot product of the weights and inputs multiplied by the correct label value yields a positive output for all data points). The weight vector is updated whenever a data point is misclassified.
+After the setup, the script enters the training loop using the perceptron update rule. The training continues until all data points are correctly classified (i.e., until the dot product of the weights and inputs multiplied by the correct label value yields a positive output for all data points). The weight vector is updated whenever a data point is misclassified.
 
 Finally, the script outputs the final weights and the number of training steps taken and calls the **plot_chart()** function to display the decision boundary of the logic gate.
 
