@@ -14,7 +14,7 @@ This Python script applies the Perceptron algorithm to model binary logic gates 
 | Can make predictions|  yes  |only as part of training|
 
 ## Overview
-This updated version of the script includes a Perceptron class with a unit step activation function, a standard update rule and an error tolerance feature to handle floating point errors. The script provides visualisation of the decision boundary and a learning example for the AND logic function.
+This implementation of the script includes a Perceptron class with a unit step activation function, a standard update rule and an error tolerance feature to handle floating point errors. The script provides visualisation of the decision boundary and a learning example for the AND logic function.
 
 ## Prerequisites
 The script requires Python 3.x and the following Python packages:
