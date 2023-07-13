@@ -33,7 +33,7 @@ cd numpy-ml
 ## Description of the script
 The script begins by defining a helper function **plot_chart(X, w, attempt_counter)** which plots the decision boundary of the logic gate based on the weights from the Perceptron algorithm.
 
-Then, it defines an AND gate dataset, where 0 and 1 represent the input values and -1 and 1 represent the output values (negative values are used to differentiate between the "off" state and the bias).
+Then, it defines an AND gate dataset, where 0 and 1 represent the input values and -1 and 1 represent the output values (negative values are used to represent the "off" state).
 
 Next, the bias inputs are added to the input array and the weight vector is initialised with zeroes.
 
