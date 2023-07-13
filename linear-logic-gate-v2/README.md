@@ -36,11 +36,11 @@ cd numpy-ml
 
 ## Features
 ### The Perceptron class
-* **\_\_init\_\_ (self, learning_rate=1, n_iters=1000, tolerance=1e-9)**: constructs a new Perceptron instance with specific learning parameters.
-* **fit(self, X, y)**: trains the model using given data.
-* **predict(self, X)**: predicts class labels for the given data points.
-* **_unit_step_func(self, x)**: defines a unit step function with a return value of 0.5 for zero argument.
-* **plot_decision_boundary(self, X, y)**: visualises the decision boundary of the perceptron for given input (X) and output (y).
+* **\_\_init\_\_ (self, learning_rate=1, n_iters=1000, tolerance=1e-9)**: constructs a new Perceptron instance with specific learning parameters
+* **fit(self, X, y)**: trains the model using given data
+* **predict(self, X)**: predicts class labels for the given data points
+* **_unit_step_func(self, x)**: defines a unit step function with a return value of 0.5 for zero argument
+* **plot_decision_boundary(self, X, y)**: visualises the decision boundary of the perceptron for given input (X) and output (y)
 
 ## Description of the script
 The script defines a Perceptron class and sets up datasets for AND and OR logic gates using 0 and 1 for input and output values.
