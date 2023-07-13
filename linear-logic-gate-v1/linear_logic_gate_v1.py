@@ -107,13 +107,12 @@ X_samples = np.split(X, 4)
 w = np.zeros((X.shape[1], 1), dtype=int)  # Initialising the weight vector
 
 attempt_counter = 0
-lr = 1  # Setting the learning rate
 
 # Training loop using the perceptron update rule
 while np.any(np.matmul(X, w) * Y <= 0): # Error function minimisation
     for i in range(X.shape[0]):
         if np.matmul(X_samples[i], w) * Y[i] <= 0: # Error function
-            w = np.add(w.T, lr * X_samples[i] * Y[i])
+            w = np.add(w.T, * X_samples[i] * Y[i])
             w = w.T
             attempt_counter += 1
 

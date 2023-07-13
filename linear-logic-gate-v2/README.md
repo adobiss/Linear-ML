@@ -1,6 +1,18 @@
 # Linear Logic Gate v2
 This Python script applies the Perceptron algorithm to model binary logic gates like AND, OR and includes decision boundary visualisation.
 
+## Key differences vs. v2
+
+|                     |  v2   |  v1  |
+|---------------------|-------|------|
+| Perceptron class    |  yes  |  no  |
+| output range        | (0, 1)|(-1, 1)|
+| bias                |separate|part of weight vector|
+| activation function |  yes  |  no  |
+| error function      |residual|sign based|
+| learning rate       |  yes  |  no  |
+| can make predictions|  yes  |only as part of training|
+
 ## Overview
 The Perceptron in this version uses a unit step activation function and implements the standard update rule. It also contains an error tolerance feature for floating point errors, decision boundary visualisation and a learning example for the AND logic function.
 
