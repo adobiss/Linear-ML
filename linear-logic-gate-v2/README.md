@@ -1,23 +1,23 @@
 # Linear Logic Gate v2
 This Python script applies the Perceptron algorithm to model binary logic gates like AND, OR and includes decision boundary visualisation.
 
-## Key differences vs. v2
+## Key differences vs. v1
 
 |                     |  v2   |  v1  |
 |---------------------|-------|------|
 | Perceptron class    |  yes  |  no  |
-| output range        | (0, 1)|(-1, 1)|
-| bias                |separate|part of weight vector|
-| activation function |  yes  |  no  |
-| error function      |residual|sign based|
-| learning rate       |  yes  |  no  |
-| can make predictions|  yes  |only as part of training|
+| Training label range        | (0, 1)|(-1, 1)|
+| Bias                |separate|part of weight vector|
+| Activation function |  yes  |  no  |
+| Error function      |residual|sign based|
+| Learning rate       |  yes  |  no  |
+| Can make predictions|  yes  |only as part of training|
 
 ## Overview
-The Perceptron in this version uses a unit step activation function and implements the standard update rule. It also contains an error tolerance feature for floating point errors, decision boundary visualisation and a learning example for the AND logic function.
+This updated version of the script includes a Perceptron class with a unit step activation function, a standard update rule and an error tolerance feature to handle floating point errors. The script provides visualisation of the decision boundary and a learning example for the AND logic function.
 
 ## Prerequisites
-The script requires the following Python packages:
+The script requires Python 3.x and the following Python packages:
 
 - numpy
 - matplotlib
@@ -26,6 +26,12 @@ If not installed, use the package manager [pip](https://pip.pypa.io/en/stable/) 
 
 ```bash
 pip install numpy matplotlib
+```
+
+## Installation
+```bash
+git clone https://github.com/adobiss/numpy-ml.git
+cd numpy-ml
 ```
 
 ## Features
@@ -46,6 +52,23 @@ The training loop itself applies the Perceptron update rule until all data point
 If no updates are made in an epoch (meaning no misclassifications occurred) all data points are classified correctly and the training is stopped.
 
 Once the optimal learning rate is identified, it fits the model and makes predictions, also plotting the decision boundary.
+
+## Usage
+You can run the script using Python 3:
+
+**Windows:**
+```bash
+cd linear-logic-gate-v2
+python linear_logic_gate_v2.py
+# or
+py linear-logic-gate-v2.py
+```
+**macOS/Linux:**
+```bash
+cd linear-logic-gate-v2
+python3 linear_logic_gate_v2.py
+```
+
 
 ## Output
 The script outputs training statistics, the optimal learning rate, total updates and epochs, final weight vector as well as predictions for each training data input. It also displays a plot of the decision boundary with data points colour-coded by class (red for 0, blue for 1):

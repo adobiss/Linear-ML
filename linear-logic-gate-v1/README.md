@@ -49,7 +49,7 @@ You can run the script using Python 3:
 cd linear-logic-gate-v1
 python linear_logic_gate_v1.py
 # or
-py your_script.py
+py linear_logic_gate_v1.py
 ```
 **macOS/Linux:**
 ```bash
