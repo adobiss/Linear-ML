@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 #from mpl_toolkits.mplot3d import Axes3D
 
 class Logit:
-    def __init__(self, batch_size=1, n_iters=10, learning_rate=1):
+    def __init__(self, batch_size=1, n_iters=1000, learning_rate=1):
         """
         Constructor for the Logit class.
         Initializes parameters like learning rate, iterations, and batch size.
@@ -57,20 +57,24 @@ class Logit:
 
         # Initialize weights (including bias)
         self.weights = np.zeros(n_features)
+        self.loss_history = []
         
         for _ in range(self.n_iters):
-            print(_)
+            #print(_)
             y_predicted = self.predict(X)
             lin_abs = np.abs(self.lin_output)
-            print('Linear output:', np.max(lin_abs))
-            print('Predictions:', y_predicted)
+            #print('Linear output:', np.max(lin_abs))
+            #print('Predictions:', y_predicted)
             loss = self.loss_function(y, y_predicted)
-            print('Loss:', loss)
+            self.loss_history.append(loss)
+            #print('Loss:', loss)
             dw = self._compute_gradient(X, y, y_predicted)
-            print('Gradient:', dw)
+            #print('Gradient:', dw)
             self.weights -= self.lr * dw
-            print('Updated weights: ', self.weights)
+            #print('Updated weights: ', self.weights)
 
+        return self.loss_history
+    
 def min_max_scaling(X):
         """
         Scale features between 0 and 1 using Min-Max scaling.
@@ -86,6 +90,7 @@ df = pd.read_csv(r"D:\ML\Portfolio\Projects\NumPy ML\Logistic Regression\grades_
 df.Passed = df.Passed.replace(to_replace=['yes', 'no'], value=[1, 0])
 df = df.sort_values(by='Passed', ignore_index=True)
 
+'''
 # Plotting the data
 plt.scatter(df[:26].HoursStudied, df[:26].PreviousGrade, label='Failed')
 plt.scatter(df[26:].HoursStudied, df[26:].PreviousGrade, label='Passed')
@@ -93,6 +98,7 @@ plt.xlabel('Hours Studied')
 plt.ylabel('Previous Grade')
 plt.legend(loc='best')
 plt.show()
+'''
 
 # Split the dataset labels
 X = df.drop(labels='Passed', axis=1).to_numpy()
@@ -109,6 +115,7 @@ failed_mask = y == 0
 X_passed = X_scaled[passed_mask]
 X_failed = X_scaled[failed_mask]
 
+'''
 # Plotting
 plt.figure()
 plt.scatter(X_failed[:, 0], X_failed[:, 1], label='Failed', color='red')
@@ -118,11 +125,12 @@ plt.ylabel('Scaled Previous Grade')
 plt.legend(loc='best')
 plt.title('Scaled Input Data')
 plt.show()
+'''
 
 # Append bias term to the input features
-n_samples, n_features = X.shape
+n_samples, n_features = X_scaled.shape
 bias_inputs = np.ones((n_samples, 1))
-X = np.concatenate((X, bias_inputs), axis=1)
+X_scaled = np.concatenate((X_scaled, bias_inputs), axis=1)
 
 # Split the dataset
 seed = 5
@@ -137,31 +145,12 @@ test_y = y[test_set]
 
 # Fit and print loss
 log_reg = Logit()
-log_reg.fit(train_X, train_y)
-pred = log_reg.predict(train_X)
-#print(pred)
+loss_history = log_reg.fit(train_X, train_y) # Save the loss history returned by fit
 
-'''
-# Visualize the loss landscape for the composite function
-weight_range = np.linspace(-10, 10, 100)
-W1, W2 = np.meshgrid(weight_range, weight_range)
-
-Z = np.zeros(W1.shape)
-for i in range(W1.shape[0]):
-    for j in range(W1.shape[1]):
-        # a. Compute the linear output for the current weight values
-        linear_output = np.matmul(train_X[:,:2], np.array([W1[i,j], W2[i,j]]).T)
-        # b. Apply the activation function
-        predictions = log_reg._sigmoid_func(linear_output)
-        # c. Compute the loss
-        Z[i,j] = log_reg._log_loss(train_y, predictions)
-
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.plot_surface(W1, W2, Z, cmap='viridis')
-ax.set_title('Loss Landscape for Composite Function')
-ax.set_xlabel('Weight 1')
-ax.set_ylabel('Weight 2')
-ax.set_zlabel('Loss')
+# Plotting the loss history
+plt.plot(loss_history, label='Training Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Log Loss')
+plt.title('Training Loss per Epoch')
+plt.legend()
 plt.show()
-'''
