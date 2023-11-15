@@ -15,15 +15,15 @@ class Logit:
         self.activation_function = self._sigmoid_func
         self.loss_function = self._log_loss
         self.weights = None
-        self.lin_output = None
+        #self.lin_output = None
 
     def _linear_output(self, X):
         """
         Compute the linear combination of features and weights.
         """
-        self.lin_output = np.matmul(X, self.weights)
-        return self.lin_output
-        #return np.matmul(X, self.weights)
+        #self.lin_output = np.matmul(X, self.weights)
+        #return self.lin_output
+        return np.matmul(X, self.weights)
 
     def _sigmoid_func(self, x):
         """
@@ -38,16 +38,18 @@ class Logit:
         return -np.mean(y * np.log(y_pred) + (1 - y) * np.log(1 - y_pred))
     
     def _compute_gradient(self, X, y, y_predicted):
-        gradient = np.matmul(X.T, (y_predicted - y)) / len(y_predicted)
-        return gradient
+        """
+        Compute mean log loss gradients for given weights true labels and predictions
+        """
+        return np.matmul(X.T, (y_predicted - y)) / len(y_predicted) 
     
     def predict(self, X):
         """
         Predict the class labels for given features.
         """
         linear_output = self._linear_output(X)
-        y_predicted = self.activation_function(linear_output)
-        return y_predicted
+        
+        return self.activation_function(linear_output)
     
     def fit(self, X, y):
         """
@@ -62,7 +64,7 @@ class Logit:
         for _ in range(self.n_iters):
             #print(_)
             y_predicted = self.predict(X)
-            lin_abs = np.abs(self.lin_output)
+            #lin_abs = np.abs(self.lin_output)
             #print('Linear output:', np.max(lin_abs))
             #print('Predictions:', y_predicted)
             loss = self.loss_function(y, y_predicted)
@@ -83,6 +85,43 @@ def min_max_scaling(X):
         col_min = np.min(X, axis=0)
         return np.divide(X - col_min, col_max - col_min)
 
+def plot_inputs_and_decision_boundary(X, y, log_reg=None):
+    # Create masks for passed and failed
+    passed_mask = y == 1
+    failed_mask = y == 0
+
+    # Extracting values for students who passed and failed
+    X_passed = X[passed_mask]
+    X_failed = X[failed_mask]
+
+    # Plotting the data
+    plt.scatter(X_failed[:, 0], X_failed[:, 1], label='Failed', color='red')
+    plt.scatter(X_passed[:, 0], X_passed[:, 1], label='Passed', color='green')
+
+    # Plot decision boundary if a trained model is provided
+    if log_reg is not None and hasattr(log_reg, 'weights'):
+        weights = log_reg.weights
+        # Generate a sequence of x1 values from the scaled features range
+        x1_values = np.linspace(X[:, 0].min(), X[:, 0].max(), 100)
+        # Calculate corresponding x2 values for the decision boundary
+        x2_values = -(weights[-1] + weights[0] * x1_values) / weights[1]
+        plt.plot(x1_values, x2_values, label='Decision Boundary', color='blue')
+
+    plt.xlabel('Hours Studied')
+    plt.ylabel('Previous Grade')
+    plt.legend(loc='best')
+    plt.title('Training data')
+    plt.show()
+
+def plot_loss_per_epoch(loss_history):
+    # Plotting the loss history
+    plt.plot(loss_history, label='Training Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Log Loss')
+    plt.title('Training Loss per Epoch')
+    plt.legend()
+    plt.show()
+
 # Read the dataset
 df = pd.read_csv(r"D:\ML\Portfolio\Projects\NumPy ML\Logistic Regression\grades_dataset.csv")
 
@@ -90,42 +129,18 @@ df = pd.read_csv(r"D:\ML\Portfolio\Projects\NumPy ML\Logistic Regression\grades_
 df.Passed = df.Passed.replace(to_replace=['yes', 'no'], value=[1, 0])
 df = df.sort_values(by='Passed', ignore_index=True)
 
-'''
-# Plotting the data
-plt.scatter(df[:26].HoursStudied, df[:26].PreviousGrade, label='Failed')
-plt.scatter(df[26:].HoursStudied, df[26:].PreviousGrade, label='Passed')
-plt.xlabel('Hours Studied')
-plt.ylabel('Previous Grade')
-plt.legend(loc='best')
-plt.show()
-'''
-
 # Split the dataset labels
 X = df.drop(labels='Passed', axis=1).to_numpy()
 y = df.Passed.to_numpy()
 
+# Plotting the training data
+plot_inputs_and_decision_boundary(X, y, log_reg=None)
+
 # Feature scaling
 X_scaled = min_max_scaling(X)
 
-# Plotting the scaled data
-passed_mask = y == 1
-failed_mask = y == 0
-
-# Extracting values for students who passed and failed
-X_passed = X_scaled[passed_mask]
-X_failed = X_scaled[failed_mask]
-
-'''
-# Plotting
-plt.figure()
-plt.scatter(X_failed[:, 0], X_failed[:, 1], label='Failed', color='red')
-plt.scatter(X_passed[:, 0], X_passed[:, 1], label='Passed', color='green')
-plt.xlabel('Scaled Hours Studied')
-plt.ylabel('Scaled Previous Grade')
-plt.legend(loc='best')
-plt.title('Scaled Input Data')
-plt.show()
-'''
+# Plotting the scaled training data
+plot_inputs_and_decision_boundary(X_scaled, y, log_reg=None)
 
 # Append bias term to the input features
 n_samples, n_features = X_scaled.shape
@@ -143,14 +158,15 @@ train_y = y[train_set]
 test_X = X_scaled[test_set]
 test_y = y[test_set]
 
-# Fit and print loss
+# Fit the model
 log_reg = Logit()
 loss_history = log_reg.fit(train_X, train_y) # Save the loss history returned by fit
 
 # Plotting the loss history
-plt.plot(loss_history, label='Training Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Log Loss')
-plt.title('Training Loss per Epoch')
-plt.legend()
-plt.show()
+plot_loss_per_epoch(loss_history)
+
+# Plotting the decision boundary
+plot_inputs_and_decision_boundary(X_scaled, y, log_reg=log_reg)
+
+# Making predictions
+predictions = log_reg.predict(test_X)
